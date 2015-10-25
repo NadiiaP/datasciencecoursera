@@ -1,10 +1,3 @@
-#Setting working directory
-setwd("C:/Users/Nadiia/Desktop/Getting and cleaning data")
-
-#Loading data
-url<-"https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
-download.file(url, dest="getdata-projectfiles-UCI HAR Dataset.zip", mode="wb") 
-unzip ("getdata-projectfiles-UCI HAR Dataset.zip")
 
 #1. Merges the training and the test sets to create one data set.
 library(data.table)
@@ -24,11 +17,13 @@ Subject<-rbind(Subject_test, Subject_train)
 #2. Extracts only the measurements on the mean and standard deviation for each measurement. 
 features<-read.table("UCI HAR Dataset/features.txt", stringsAsFactors = F)
 library(stringr)
-mean<-str_detect(features[,2], c("mean"))
+mean<-str_detect(features[,2], "mean")
 std<-str_detect(features[,2], "std")
 dataX<-cbind(X[mean],X[std])
 
 #3.Uses descriptive activity names to name the activities in the data set 
+labels<-read.table("UCI HAR Dataset/activity_labels.txt", stringsAsFactors = F)
+Y<-lapply(Y, factor, levels=labels[[1]], labels=labels[[2]])
 dataXY<-cbind(Y,dataX)
 
 # 4. Appropriately labels the data set with descriptive variable names. 
